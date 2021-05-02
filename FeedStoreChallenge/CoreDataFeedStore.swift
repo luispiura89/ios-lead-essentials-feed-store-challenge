@@ -50,16 +50,7 @@ public final class CoreDataFeedStore: FeedStore {
 			do {
 				let cache = ManagedCache(context: context)
 				cache.timestamp = timestamp
-				cache.feed = NSOrderedSet(array: feed.map {
-					let image = ManagedFeedImage(context: context)
-
-					image.id = $0.id
-					image.imageDescription = $0.description
-					image.location = $0.location
-					image.url = $0.url
-
-					return image
-				})
+				cache.feed = ManagedCache.getFeed(from: feed, in: context)
 
 				try context.save()
 				completion(nil)
@@ -91,6 +82,19 @@ private class ManagedCache: NSManagedObject {
 		let request = NSFetchRequest<ManagedCache>(entityName: ManagedCache.entity().name!)
 		let fetchResult = try context.fetch(request)
 		return fetchResult.first
+	}
+
+	static func getFeed(from feed: [LocalFeedImage], in context: NSManagedObjectContext) -> NSOrderedSet {
+		return NSOrderedSet(array: feed.map {
+			let image = ManagedFeedImage(context: context)
+
+			image.id = $0.id
+			image.imageDescription = $0.description
+			image.location = $0.location
+			image.url = $0.url
+
+			return image
+		})
 	}
 }
 
