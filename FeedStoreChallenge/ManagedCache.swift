@@ -21,7 +21,9 @@ internal final class ManagedCache: NSManagedObject {
 			LocalFeedImage(id: $0.id, description: $0.imageDescription, location: $0.location, url: $0.url)
 		}
 	}
+}
 
+extension ManagedCache {
 	static func uniqueInstance(in context: NSManagedObjectContext) throws -> ManagedCache {
 		try find(in: context).map(context.delete)
 
