@@ -10,12 +10,12 @@ import Foundation
 import CoreData
 
 @objc(ManagedCache)
- final class ManagedCache: NSManagedObject {
+final class ManagedCache: NSManagedObject {
 	@NSManaged var timestamp: Date
 	@NSManaged var feed: NSOrderedSet
 
 	var localFeed: [LocalFeedImage] {
-		feed.array.compactMap {
+		feed.compactMap {
 			$0 as? ManagedFeedImage
 		}.map {
 			LocalFeedImage(id: $0.id, description: $0.imageDescription, location: $0.location, url: $0.url)
